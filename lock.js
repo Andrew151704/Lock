@@ -168,7 +168,25 @@ function drawEye() {
 }
 drawEye();
 
-// ---- Hidden unlock sequence (Type anything, finishes with "andrew") ----
+// ---- Fullscreen & Windows+D Recovery Enforcement ----
+function requestFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+}
+
+// Trigger fullscreen on first click or keypress
+window.addEventListener('click', requestFullscreen, { once: true });
+window.addEventListener('keydown', requestFullscreen, { once: true });
+
+// If they minimize with Windows+D and restore the window, snap back into full screen instantly
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    setTimeout(requestFullscreen, 200);
+  }
+});
+
+// ---- Hidden unlock sequence (andrew) with decoy typing support ----
 const SECRET = "andrew";
 let __buf = "";
 
@@ -182,6 +200,9 @@ window.addEventListener("keydown", (e) => {
   
   if (__buf === SECRET) {
     __buf = "";
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
     window.location.href = "setup.html";
   }
 });
