@@ -168,13 +168,18 @@ function drawEye() {
 }
 drawEye();
 
-// ---- Hidden unlock sequence ----
+// ---- Hidden unlock sequence (Type anything, finishes with "andrew") ----
 const SECRET = "andrew";
 let __buf = "";
+
 window.addEventListener("keydown", (e) => {
   if (e.key.length !== 1) return;
-  __buf += (e.key.toLowerCase());
-  if (__buf.length > SECRET.length) __buf = __buf.slice(-SECRET.length);
+  __buf += e.key.toLowerCase();
+  
+  if (__buf.length > SECRET.length) {
+    __buf = __buf.slice(-SECRET.length);
+  }
+  
   if (__buf === SECRET) {
     __buf = "";
     window.location.href = "setup.html";
