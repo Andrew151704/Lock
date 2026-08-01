@@ -168,29 +168,32 @@ function drawEye() {
 }
 drawEye();
 
-// ---- Fullscreen & Windows+D Recovery Enforcement ----
+// ---- Fullscreen & Recovery Enforcement ----
 function requestFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
 }
 
-// Trigger fullscreen on first click or keypress
 window.addEventListener('click', requestFullscreen, { once: true });
 window.addEventListener('keydown', requestFullscreen, { once: true });
 
-// If they minimize with Windows+D and restore the window, snap back into full screen instantly
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
     setTimeout(requestFullscreen, 200);
   }
 });
 
-// ---- Hidden unlock sequence (andrew) with decoy typing support ----
+// ---- Hidden unlock sequence & ESC blocker ----
 const SECRET = "andrew";
 let __buf = "";
 
 window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    return;
+  }
+
   if (e.key.length !== 1) return;
   __buf += e.key.toLowerCase();
   
